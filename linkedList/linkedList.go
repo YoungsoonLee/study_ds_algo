@@ -150,3 +150,136 @@ func (ll *LinkedList) Delete(position int) (int, error) {
 	ll.Size--
 	return curr.Val, nil
 }
+
+func hasCycle(head *ListNode) bool {
+	fast, slow := head, head
+	for fast != nil && fast.Next != nil {
+		fast = fast.Next.Next
+		slow = slow.Next
+
+		if fast == slow {
+			return true
+		}
+	}
+
+	return false
+}
+
+func findLoopBeginning(head *ListNode) *ListNode {
+	fast, slow := head, head
+	loopExists := false
+
+	for fast != nil && fast.Next != nil {
+		fast = fast.Next.Next
+		slow = slow.Next
+
+		if fast == slow {
+			loopExists = true
+			break
+		}
+	}
+
+	if loopExists {
+		slow = head
+		for slow != fast {
+			fast = fast.Next
+			slow = slow.Next
+		}
+		return slow
+	}
+	return nil
+}
+
+func findLoopLength(head *ListNode) int {
+	fast, slow := head, head
+	loopExists := false
+
+	for fast != nil && fast.Next != nil {
+		fast = fast.Next.Next
+		slow = slow.Next
+
+		if fast == slow {
+			loopExists = true
+			break
+		}
+	}
+
+	if loopExists {
+		counter := 1
+		fast = fast.Next
+		for slow != fast {
+			fast = fast.Next
+			counter++
+		}
+		return counter
+	}
+	return 0
+}
+
+func (ll *LinkedList) sortedInsert(val int) {
+	newNode := &ListNode{Val: val}
+
+	// special case for the head end
+	if ll.Head == nil || ll.Head.Val >= val {
+		newNode.Next = ll.Head
+		ll.Head = newNode
+		return
+	}
+
+	current := ll.Head
+	for current.Next != nil && current.Next.Val < val {
+		current = current.Next
+	}
+
+	newNode.Next = current.Next
+	current.Next = newNode
+}
+
+// reverse !!!
+func reverseList(head *ListNode) *ListNode {
+	var prev, current *ListNode
+	for current = head; current != nil; {
+		current.Next, prev, current = prev, current, current.Next
+	}
+	return prev
+}
+
+func reverList2(head *ListNode) *ListNode {
+	if head == nil {
+		return head
+	}
+
+	h := reverse(head)
+	head.Next = nil
+	return h
+}
+
+func reverse(current *ListNode) *ListNode {
+	if current == nil {
+		return nil
+	}
+
+	temp := reverse(current.Next)
+	if temp == nil {
+		return current
+	}
+
+	current.Next.Next = current
+	return temp
+}
+
+// brute force
+// O(mnn)
+func getInstersactionNode(head1, head2 *ListNode) *ListNode {
+	for head1 != nil {
+		temp := head2
+		for temp != nil {
+			if temp == head1 {
+				return head1
+			}
+			temp = temp.Next
+		}
+		head1 = head1.Next
+	}
+	return nil
+}
