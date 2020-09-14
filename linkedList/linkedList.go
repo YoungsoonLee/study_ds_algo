@@ -283,3 +283,29 @@ func getInstersactionNode(head1, head2 *ListNode) *ListNode {
 	}
 	return nil
 }
+
+func getInstersactionNode2(head1, head2 *ListNode) *ListNode {
+	len1, len2 := findLen(head1), findLen(head2)
+	if len1 > len2 {
+		for ; len1 > len2; len1-- {
+			head1 = head1.Next
+		}
+	} else {
+		for ; len2 > len1; len2-- {
+			head2 = head2.Next
+		}
+	}
+
+	for head1 != head2 {
+		head1, head2 = head1.Next, head2.Next
+	}
+	return head1
+}
+
+func findLen(head *ListNode) int {
+	l := 0
+	for ; head != nil; head = head.Next {
+		l++
+	}
+	return l
+}
