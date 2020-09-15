@@ -558,3 +558,41 @@ func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
 	}
 	return result.Next
 }
+
+func insertionSortList(head *ListNode) *ListNode {
+	if head == nil || head.Next == nil {
+		return head
+	}
+
+	result := &ListNode{Next: head}
+	current := head.Next
+	head.Next = nil
+
+	for current != nil {
+		pre := result
+		target := result.Next
+
+		for target != nil && current.Val > target.Val {
+			target = target.Next
+			pre = pre.Next
+		}
+		// !!!!
+		temp := current
+		current = current.Next
+		temp.Next = target
+		pre.Next = temp
+	}
+	return result.Next
+}
+
+func removeDuplicates(head *ListNode) *ListNode {
+	current := head
+	for current != nil {
+		if current.Next != nil && current.Val == current.Next.Val {
+			current.Next = current.Next.Next
+			continue
+		}
+		current = current.Next
+	}
+	return head
+}
