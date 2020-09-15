@@ -206,3 +206,39 @@ func (cll *CLL) Delete(pos int) int {
 	}
 	return -1
 }
+
+// create a new node of circular linked list
+func NewListNode(val int) *CLLNode {
+	temp := &CLLNode{}
+	temp.Next = temp
+	temp.Val = val
+	return temp
+}
+
+func getJosephusPosition(m, n int) {
+	// create a circular linked list of size N
+	head := NewListNode(1)
+	prev := head
+
+	for i := 2; i <= n; i++ {
+		prev.Next = NewListNode(i)
+		prev = prev.Next
+	}
+
+	prev.Next = head // connect last node to first
+
+	ptr1, ptr2 := head, head
+	for ptr1.Next != ptr1 {
+		count := 1
+		for count != m {
+			ptr2 = ptr1
+			ptr1 = ptr1.Next
+			count++
+		}
+
+		// remomve the m-th node
+		ptr2.Next = ptr1.Next
+		ptr1 = ptr2.Next
+	}
+	fmt.Println("Last person left standing ", "(Josephus Position) is ", ptr1.Val)
+}

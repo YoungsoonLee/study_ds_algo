@@ -1,4 +1,4 @@
-package main
+package linkedList
 
 import (
 	"fmt"
@@ -308,4 +308,253 @@ func findLen(head *ListNode) int {
 		l++
 	}
 	return l
+}
+
+// O(n) + O(n) = O(n)
+func middleNode(head *ListNode) *ListNode {
+	l := findLen(head)
+	count, target := 0, (l/2)+1
+
+	for {
+		count++
+		if count == target {
+			return head
+		}
+		head = head.Next
+	}
+}
+
+func middleNode2(head *ListNode) *ListNode {
+	fast, slow := head, head
+	for fast != nil && fast.Next != nil {
+		fast = fast.Next.Next
+		slow = slow.Next
+	}
+	return slow
+}
+
+// O(n),  recursive is stack !!! O(n)
+func printListInReverse(head *ListNode) {
+	if head == nil {
+		return
+	}
+
+	printListInReverse(head.Next)
+	fmt.Print(head.Val)
+}
+
+// O(n/2) = O(n)
+func (ll *LinkedList) IsLengthEven() bool {
+	current := ll.Head
+	for current != nil && current.Next != nil {
+		current = current.Next.Next
+	}
+
+	if current != nil {
+		return false
+	}
+	return true
+}
+
+// O(n+m)
+// recursive
+func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
+	if l1 == nil {
+		return l2
+	}
+
+	if l2 == nil {
+		return l1
+	}
+
+	if l1.Val < l2.Val {
+		l1.Next = mergeTwoLists(l1.Next, l2)
+		return l1
+	}
+
+	l2.Next = mergeTwoLists(l1, l2.Next)
+	return l2
+}
+
+// iterative
+func mergeTwoLists_iter(l1 *ListNode, l2 *ListNode) *ListNode {
+	dummy := new(ListNode)
+
+	for node := dummy; l1 != nil || l2 != nil; node = node.Next {
+		if l1 == nil {
+			node.Next = l2
+			break
+		} else if l2 == nil {
+			node.Next = l1
+			break
+		} else if l1.Val < l2.Val {
+			node.Next = l1
+			l1 = l1.Next
+		} else {
+			node.Next = l2
+			l2 = l2.Next
+		}
+
+	}
+	return dummy.Next
+}
+
+func mergeKLists(list []*ListNode) *ListNode {
+	if list == nil || len(list) == 0 {
+		return nil
+	}
+
+	for len(list) > 1 {
+		l1 := list[0]
+		l2 := list[1]
+		list = list[2:]
+
+		merged := mergeTwoLists(l1, l2)
+		list = append(list, merged)
+	}
+	return list[0]
+}
+
+func sortList(head *ListNode) *ListNode {
+	if head == nil || head.Next == nil {
+		return head
+	}
+
+	slow, fast := head, head
+	for fast.Next != nil && fast.Next.Next != nil {
+		slow, fast = slow.Next, fast.Next.Next
+	}
+
+	firstTail := slow
+	slow = slow.Next
+	firstTail.Next = nil // divide the first list and the second
+
+	first, second := sortList(head), sortList(slow)
+	return merge(first, second)
+}
+
+func merge(head1 *ListNode, head2 *ListNode) *ListNode {
+	curHead := &ListNode{}
+	tmpHead := curHead
+
+	for head1 != nil && head2 != nil {
+		if head1.Val < head2.Val {
+			curHead.Next = head1
+			head1 = head1.Next
+			curHead = curHead.Next
+		} else {
+			curHead.Next = head2
+			head2 = head2.Next
+			curHead = curHead.Next
+		}
+	}
+
+	// remains
+	if head1 != nil {
+		curHead.Next = head1
+	} else if head2 != nil {
+		curHead.Next = head2
+	}
+
+	return tmpHead.Next
+}
+
+func splitList(head *ListNode) (head1 *ListNode, head2 *ListNode) {
+	var slow, fast *ListNode
+	if head == nil || head.Next == nil { // length < 2
+		head1 = head
+		head2 = nil
+	} else {
+		slow = head
+		fast = head.Next
+
+		for fast != nil {
+			fast = fast.Next
+			if fast != nil {
+				slow = slow.Next
+				fast = fast.Next
+			}
+		}
+		//
+		head1 = head
+		head2 = slow.Next
+		slow.Next = nil
+	}
+	return head1, head2
+}
+
+// hmm...
+func reverseBlockOfKNodes(head *ListNode, k int) *ListNode {
+	// base check
+	if head == nil || k == 1 {
+		return head
+	}
+
+	// get length
+	length := 0
+	node := head
+	for node != nil {
+		length++
+		node = node.Next
+	}
+
+	// result
+	result := ListNode{0, head}
+	prev := &result
+
+	for step := 0; step+k <= length; step = step + k {
+		tail := prev.Next
+		nextNode := tail.Next
+
+		for i := 1; i < k; i++ {
+			tail.Next = nextNode.Next
+			nextNode.Next = prev.Next
+			prev.Next = nextNode
+			nextNode = tail.Next
+		}
+
+		prev = tail
+	}
+
+	return result.Next
+}
+
+// iterative reversePairs
+// !!!!!
+func reversePairs(head *ListNode) *ListNode {
+	if head == nil || head.Next == nil {
+		return head
+	}
+
+	result := head.Next
+	var prev *ListNode
+	for head != nil && head.Next != nil {
+		nextNode := head.Next
+		head.Next = nextNode.Next
+		nextNode.Next = head
+		if prev != nil {
+			prev.Next = nextNode
+		}
+		prev = head
+		head = head.Next
+	}
+	return result
+}
+
+func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
+	carry, result := 0, new(ListNode)
+	for node := result; l1 != nil || l2 != nil || carry > 0; node = node.Next {
+		if l1 != nil {
+			carry += l1.Val
+			l1 = l1.Next
+		}
+		if l2 != nil {
+			carry += l2.Val
+			l2 = l2.Next
+		}
+
+		node.Next = &ListNode{carry % 10, nil}
+		carry /= 10
+	}
+	return result.Next
 }
