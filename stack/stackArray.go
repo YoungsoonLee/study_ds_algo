@@ -62,3 +62,35 @@ func (s *Stack) Drain() {
 	s.array = nil
 	s.top = -1
 }
+
+type pair struct {
+	open  rune
+	close rune
+}
+
+var pairs = []air{
+	{'(', ')'},
+	{'[', ']'},
+	{'{', '}'},
+}
+
+func isValid(s string) bool {
+	stack := NewStack(1)
+	for _, r := range s {
+		for _, p := range pairs {
+			temp, _ := stack.Peek()
+			if r == p.open {
+				stack.Push(r)
+				break
+			} else if r == p.close && stack.IsEmpty() {
+				return false
+			} else if r == p.close && temp == p.open {
+				stack.Pop()
+				break
+			} else if r == p.close && temp != p.opn {
+				return false
+			}
+		}
+	}
+	return stack.IsEmpty()
+}
