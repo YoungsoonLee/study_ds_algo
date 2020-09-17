@@ -1,4 +1,4 @@
-package stack
+package minStack
 
 import "math"
 
@@ -45,4 +45,54 @@ func (stack *MinStack) Peek() int {
 	} else {
 		return 0
 	}
+}
+
+func (stack *MinStack) Size() int {
+	return len(stack.elementStack)
+}
+
+func (stack *MinStack) GetMin() int {
+	if len(stack.minimumStack) > 0 {
+		return stack.minimumStack[len(stack.minimumStack)-1]
+	} else {
+		return 0
+	}
+}
+
+func (stack *MinStack) IsEmpty() bool {
+	return len(stack.elementStack) == 0
+}
+
+func (stack *MinStack) Clear() {
+	stack.elementStack = nil
+	stack.minimumStack = nil
+}
+
+func reverse(str string) string {
+	result := []rune(str)
+	var beg int
+	end := len(result) - 1
+
+	for beg < end {
+		result[beg], result[end] = result[end], result[beg]
+		beg = beg + 1
+		end = end - 1
+	}
+	return string(result)
+}
+
+func isPalindrome(testString string) bool {
+	if reverse(testString) == testString {
+		return true
+	}
+	return false
+}
+
+func isPalindrome2(input string) bool {
+	for i := 0; i < len(input)/2; i++ {
+		if input[i] != input[len(input)-i-1] { // !!!
+			return false
+		}
+	}
+	return true
 }

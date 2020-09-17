@@ -68,7 +68,7 @@ type pair struct {
 	close rune
 }
 
-var pairs = []air{
+var pairs = []pair{
 	{'(', ')'},
 	{'[', ']'},
 	{'{', '}'},
@@ -87,7 +87,7 @@ func isValid(s string) bool {
 			} else if r == p.close && temp == p.open {
 				stack.Pop()
 				break
-			} else if r == p.close && temp != p.opn {
+			} else if r == p.close && temp != p.open {
 				return false
 			}
 		}
