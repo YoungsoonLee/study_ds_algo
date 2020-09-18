@@ -1,4 +1,4 @@
-package stackArray
+package models
 
 import "errors"
 
@@ -93,4 +93,62 @@ func isValid(s string) bool {
 		}
 	}
 	return stack.IsEmpty()
+}
+
+func (stack *Stack) reverseStack() {
+	if stack.IsEmpty() {
+		return
+	}
+
+	data, _ := stack.Pop()
+	stack.reverseStack()
+	stack.insertAtBottom(data)
+}
+
+func (stack *Stack) insertAtBottom(data interface{}) {
+	if stack.IsEmpty() {
+		stack.Push(data)
+		return
+	}
+
+	temp, _ := stack.Pop()
+	stack.insertAtBottom(data)
+	stack.Push(temp)
+}
+
+func abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
+}
+
+func pairWiseConsecutive(stack *Stack) bool {
+	auxStack := NewStack(1)
+	for !stack.IsEmpty() {
+		peek, _ := stack.Peek()
+		auxStack.Push(peek)
+		stack.Pop()
+	}
+
+	result := true
+	for auxStack.Size() > 1 {
+		x, _ := auxStack.Peek()
+		auxStack.Pop()
+		y, _ := auxStack.Peek()
+		auxStack.Pop()
+
+		if abs(x.(int)-y.(int)) != 1 {
+			result = false
+		}
+
+		stack.Push(x)
+		stack.Push(y)
+	}
+
+	if auxStack.Size() == 1 {
+		peek, _ := auxStack.Peek()
+		stack.Push(peek)
+	}
+	return result
 }

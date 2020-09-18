@@ -1,37 +1,37 @@
-package stackSlice
+package models
 
 import "errors"
 
-type Stack struct {
+type StackSlice struct {
 	top      int
 	capacity uint
 	array    []interface{}
 }
 
-func (stack *Stack) Init(capacity uint) *Stack {
+func (stack *StackSlice) Init(capacity uint) *StackSlice {
 	stack.top = -1
 	stack.capacity = capacity
 	stack.array = make([]interface{}, capacity)
 	return stack
 }
 
-func NewStack(capacity uint) *Stack {
-	return new(Stack).Init(capacity) // !!!!
+func NewStackSlice(capacity uint) *StackSlice {
+	return new(StackSlice).Init(capacity) // !!!!
 }
 
-func (stack *Stack) Size() uint {
+func (stack *StackSlice) Size() uint {
 	return uint(stack.top + 1)
 }
 
-func (stack *Stack) IsFull() bool {
+func (stack *StackSlice) IsFull() bool {
 	return stack.top == int(stack.capacity)-1
 }
 
-func (stack *Stack) IsEmpty() bool {
+func (stack *StackSlice) IsEmpty() bool {
 	return stack.top == -1
 }
 
-func (stack *Stack) Resize() {
+func (stack *StackSlice) Resize() {
 	if stack.IsFull() {
 		stack.capacity *= 2
 	} else {
@@ -42,7 +42,7 @@ func (stack *Stack) Resize() {
 	stack.array = target
 }
 
-func (stack *Stack) Push(data interface{}) error {
+func (stack *StackSlice) Push(data interface{}) error {
 	if stack.IsFull() {
 		stack.Resize()
 	}
@@ -51,7 +51,7 @@ func (stack *Stack) Push(data interface{}) error {
 	return nil
 }
 
-func (stack *Stack) Pop() (interface{}, error) {
+func (stack *StackSlice) Pop() (interface{}, error) {
 	if stack.IsEmpty() {
 		return nil, errors.New("stack is empty")
 	}
@@ -63,7 +63,7 @@ func (stack *Stack) Pop() (interface{}, error) {
 	return temp, nil
 }
 
-func (stack *Stack) Peek() (interface{}, error) {
+func (stack *StackSlice) Peek() (interface{}, error) {
 	if stack.IsEmpty() {
 		return nil, errors.New("stack is empty")
 	}
@@ -71,7 +71,7 @@ func (stack *Stack) Peek() (interface{}, error) {
 	return temp, nil
 }
 
-func (stack *Stack) Drain() {
+func (stack *StackSlice) Drain() {
 	stack.array = nil
 	stack.top = -1
 }

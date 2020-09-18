@@ -1,6 +1,6 @@
-package stackLinkedList
+package models
 
-type Stack struct {
+type StackLL struct {
 	top  *ListNode
 	size int
 }
@@ -10,20 +10,20 @@ type ListNode struct {
 	next *ListNode
 }
 
-func (s *Stack) length() int {
+func (s *StackLL) length() int {
 	return s.size
 }
 
-func (s *Stack) IsEmpty() bool {
+func (s *StackLL) IsEmpty() bool {
 	return s.size == 0
 }
 
-func (s *Stack) Push(data interface{}) {
+func (s *StackLL) Push(data interface{}) {
 	s.top = &ListNode{data, s.top}
 	s.size++
 }
 
-func (s *Stack) Pop() (data interface{}) {
+func (s *StackLL) Pop() (data interface{}) {
 	if s.size > 0 {
 		data, s.top = s.top.data, s.top.next
 		s.size--
@@ -31,7 +31,7 @@ func (s *Stack) Pop() (data interface{}) {
 	return nil
 }
 
-func (s *Stack) Peek() (data interface{}) {
+func (s *StackLL) Peek() (data interface{}) {
 	if s.size > 0 {
 		data = s.top.data
 		return
