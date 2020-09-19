@@ -152,3 +152,17 @@ func pairWiseConsecutive(stack *Stack) bool {
 	}
 	return result
 }
+
+func removeDuplicates(s string) string {
+	stack := make([]byte, 0, len(s))
+	for i := range s {
+		if len(stack) > 0 && stack[len(stack)-1] == s[i] {
+			// remove
+			stack = stack[:len(stack)-1]
+		} else {
+			stack = append(stack, s[i])
+		}
+	}
+
+	return string(stack)
+}
