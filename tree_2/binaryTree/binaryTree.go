@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
-
-	stack "github.com/YoungsoonLee/study-ds-algo/stack"
+	// stack "github.com/YoungsoonLee/study-ds-algo/stack"
 )
 
 type BinaryTreeNode struct {
@@ -317,6 +316,7 @@ func SizeWithQueue(root *BinaryTreeNode) int {
 	return result
 }
 
+/*
 func LevelOrderBottomUp(root *BinaryTreeNode) [][]int {
 	if root == nil {
 		return [][]int{}
@@ -348,6 +348,7 @@ func LevelOrderBottomUp(root *BinaryTreeNode) [][]int {
 	}
 	return result
 }
+*/
 
 func DeleteTree(root *BinaryTreeNode) *BinaryTreeNode {
 	if root == nil {
@@ -360,18 +361,267 @@ func DeleteTree(root *BinaryTreeNode) *BinaryTreeNode {
 	return root
 }
 
+func Height(root *BinaryTreeNode) int {
+	if root == nil {
+		return 0
+	} else {
+		leftHeight := Height(root.left)
+		rightHeight := Height(root.right)
+		if leftHeight > rightHeight {
+			return leftHeight + 1
+		} else {
+			return rightHeight + 1
+		}
+	}
+}
+
+func HeightWithQueue(root *BinaryTreeNode) int {
+	if root == nil {
+		return 0
+	}
+	count := 0
+	queue := []*BinaryTreeNode{root}
+	for len(queue) > 0 {
+		qlen := len(queue)
+		var level []int
+		for i := 0; i < qlen; i++ {
+			node := queue[0]
+			level = append(level, node.data)
+			queue = queue[1:]
+			if node.left != nil {
+				queue = append(queue, node.left)
+			}
+			if node.right != nil {
+				queue = append(queue, node.right)
+			}
+		}
+		count++
+	}
+	return count
+}
+
+func Deepest(root *BinaryTreeNode) *BinaryTreeNode {
+	if root == nil {
+		return nil
+	}
+	var node *BinaryTreeNode
+	queue := []*BinaryTreeNode{root}
+	for len(queue) > 0 {
+		qlen := len(queue)
+		//var level []int
+		for i := 0; i < qlen; i++ {
+			node = queue[0]
+			//level = append(level, node.data)
+			queue = queue[1:]
+
+			if node.left != nil {
+				queue = append(queue, node.left)
+			}
+			if node.right != nil {
+				queue = append(queue, node.right)
+			}
+		}
+	}
+	return node
+}
+
+func LeavesCount(root *BinaryTreeNode) int {
+	if root == nil {
+		return 0
+	}
+	count := 0
+	queue := []*BinaryTreeNode{root}
+	for len(queue) > 0 {
+		qlen := len(queue)
+		//var level []int
+		for i := 0; i < qlen; i++ {
+			node := queue[0]
+			//level = append(level, node.data)
+			queue = queue[1:]
+			if node.left == nil && node.right == nil {
+				count++
+			}
+			if node.left != nil {
+				queue = append(queue, node.left)
+			}
+			if node.right != nil {
+				queue = append(queue, node.right)
+			}
+		}
+	}
+	return count
+}
+
+func FullNodesCountWithQ(root *BinaryTreeNode) int {
+	if root == nil {
+		return 0
+	}
+
+	count := 0
+	queue := []*BinaryTreeNode{root}
+
+	for len(queue) > 0 {
+		qlen := len(queue)
+		for i := 0; i < qlen; i++ {
+			node := queue[0]
+			queue = queue[1:]
+			if node.left != nil && node.right != nil {
+				count++
+			}
+			if node.left != nil {
+				queue = append(queue, node.left)
+			}
+			if node.right != nil {
+				queue = append(queue, node.right)
+			}
+		}
+	}
+	return count
+}
+
+// recursion
+func FullNodesCount(root *BinaryTreeNode) int {
+
+	count := 0
+	//left := 0
+	//right := 0
+	if root.left != nil && root.right != nil {
+		count++
+	}
+
+	if root.left != nil {
+		count += FullNodesCount(root.left)
+	}
+
+	if root.right != nil {
+		count += FullNodesCount(root.right)
+	}
+
+	return count
+}
+
+func HalfNodesCountWithQ(root *BinaryTreeNode) int {
+	if root == nil {
+		return 0
+	}
+
+	count := 0
+	queue := []*BinaryTreeNode{root}
+	for len(queue) > 0 {
+		qlen := len(queue)
+		for i := 0; i < qlen; i++ {
+			node := queue[0]
+			queue = queue[1:]
+			if node.left != nil && node.right == nil {
+				count++
+			} else if node.left == nil && node.right != nil {
+				count++
+			}
+
+			if node.left != nil {
+				queue = append(queue, node.left)
+			}
+			if node.right != nil {
+				queue = append(queue, node.right)
+			}
+		}
+	}
+	return count
+}
+
+func HalfNodesCount(root *BinaryTreeNode) int {
+	if root == nil {
+		return 0
+	}
+
+	count := 0
+	//left := 0
+	//right := 0
+
+	if (root.left != nil && root.right == nil) || (root.left == nil && root.right != nil) {
+		count++
+	}
+	if root.left != nil {
+		count += HalfNodesCount(root.left)
+	}
+	if root.right != nil {
+		count += HalfNodesCount(root.right)
+	}
+	return count
+}
+
+func CompareStructures(root1, root2 *BinaryTreeNode) bool {
+	if root1 == nil && root2 == nil {
+		return true
+	}
+
+	if root1 == nil || root2 == nil {
+		return false
+	}
+
+	return CompareStructures(root1.left, root2.left) && CompareStructures(root1.right, root2.right)
+}
+
+func DiameterOfBinaryTree(root *BinaryTreeNode) int {
+	if root == nil {
+		return 0
+	}
+
+	var diameter int
+	Diameter(root, &diameter)
+	return diameter
+}
+
+func Diameter(root *BinaryTreeNode, diameter *int) int {
+	if root == nil {
+		return 0
+	}
+	leftDepth := Diameter(root.left, diameter)
+	rightDepth := Diameter(root.right, diameter)
+
+	if leftDepth+rightDepth > *diameter {
+		*diameter = leftDepth + rightDepth
+	}
+	return max(leftDepth, rightDepth) + 1
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func maxLevelSum(root *BinaryTreeNode) (ele []int, maxSum, level int) {
+	ele, maxSum, level = []int{}, math.MinInt32, 0
+}
+
 func main() {
 	t1 := NewBinaryTree(10, 1)
 	PreOrder(t1)
 	fmt.Println()
-	c := PreOrderWalker(t1)
-	for {
-		v, ok := <-c
-		if !ok {
-			break
+	/*
+		c := PreOrderWalker(t1)
+		for {
+			v, ok := <-c
+			if !ok {
+				break
+			}
+			fmt.Printf("%d", v)
 		}
-		fmt.Printf("%d", v)
-	}
+	*/
 
 	fmt.Println("findMax: ", findMax(t1))
+
+	fmt.Println("Deepest: ", Deepest(t1))
+
+	fmt.Println("LeavesCount: ", LeavesCount(t1))
+
+	fmt.Println("FullNodesCount: ", FullNodesCount(t1))
+
+	fmt.Println("FullNodesCountWithQ: ", FullNodesCountWithQ(t1))
+
+	fmt.Println("HalfNodesCountWithQ: ", HalfNodesCountWithQ(t1))
+
+	fmt.Println("HalfNodesCount: ", HalfNodesCount(t1))
 }
