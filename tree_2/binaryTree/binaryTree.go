@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
+	"strconv"
 	// stack "github.com/YoungsoonLee/study-ds-algo/stack"
 )
 
@@ -594,6 +595,176 @@ func max(a, b int) int {
 
 func maxLevelSum(root *BinaryTreeNode) (ele []int, maxSum, level int) {
 	ele, maxSum, level = []int{}, math.MinInt32, 0
+	if root == nil {
+		return ele, maxSum, level
+	}
+
+	var result [][]int
+	levelNumber := 0
+	queue := []*BinaryTreeNode{root}
+	for len(queue) > 0 {
+		qlen := len(queue)
+		var currentLevel []int
+		sum := 0
+		for i := 0; i < qlen; i++ {
+			node := queue[0]
+			currentLevel = append(currentLevel, node.data)
+			sum += node.data
+			queue = queue[1:]
+			if node.left != nil {
+				queue = append(queue, node.left)
+			}
+			if node.right != nil {
+				queue = append(queue, node.right)
+			}
+		}
+
+		if sum > maxSum {
+			maxSum = sum
+			ele = currentLevel
+			level = levelNumber
+		}
+		result = append(result, currentLevel)
+		levelNumber++
+	}
+
+	return ele, maxSum, level
+
+}
+
+func BinaryTreePaths(root *BinaryTreeNode) []string {
+	result := make([]string, 0)
+	paths(root, "", &result)
+	return result
+}
+
+func paths(root *BinaryTreeNode, prefix string, result *[]string) {
+	if root == nil {
+		return
+	}
+
+	if len(prefix) == 0 {
+		prefix += strconv.Itoa(root.data)
+	} else {
+		prefix += "->" + strconv.Itoa(root.data)
+	}
+
+	if root.left == nil && root.right == nil {
+		*result = append(*result, prefix+"\n")
+		return
+	}
+	paths(root.left, prefix, result)
+	paths(root.right, prefix, result)
+}
+
+func HasPathSum(root *BinaryTreeNode, sum int) bool {
+	allSums := make([]int, 0)
+	getAllSums(root, &allSums, 0)
+	for _, val := range allSums {
+		if sum == val {
+			allSums = []int{}
+			return true
+		}
+	}
+	allSums = []int{}
+	return false
+}
+
+func getAllSums(root *BinaryTreeNode, allSums *[]int, currSum int) {
+	if root != nil {
+		currSum += root.data
+		if root.left == nil && root.right == nil {
+			*allSums = append(*allSums, currSum)
+		} else {
+			getAllSums(root.left, allSums, currSum)
+			getAllSums(root.right, allSums, currSum)
+		}
+	}
+}
+
+func Sum(root *BinaryTreeNode) int {
+	if root == nil {
+		return 0
+	}
+	return (root.data + Sum(root.left) + Sum(root.right))
+}
+
+func SumWithQ(root *BinaryTreeNode) int {
+	if root == nil {
+		return 0
+	}
+
+	queue := []*BinaryTreeNode{root}
+	sum := 0
+
+	for len(queue) > 0 {
+		qlen := len(queue)
+		for i := 0; i < qlen; i++ {
+			node := queue[0]
+			queue = queue[1:]
+			sum += node.data
+
+			if node.left != nil {
+				queue = append(queue, node.left)
+			}
+			if node.right != nil {
+				queue = append(queue, node.right)
+			}
+		}
+	}
+	return sum
+}
+
+func InvertTree(root *BinaryTreeNode) *BinaryTreeNode {
+	if root != nil {
+		root.left, root.right = InvertTree(root.right), InvertTree(root.left)
+	}
+	return root
+}
+
+func InvertTree2(root *BinaryTreeNode) {
+	if root == nil {
+		return
+	}
+	root.left, root.right = root.right, root.left
+	InvertTree2(root.left)
+	InvertTree2(root.right)
+	return
+}
+
+func checkMirror(root1 *BinaryTreeNode, root2 *BinaryTreeNode) bool {
+	if root1 == nil && root2 == nil {
+		return true
+	}
+
+	if root1 == nil || root2 == nil {
+		return false
+	}
+
+	if root1.data != root2.data {
+		return false
+	}
+	return checkMirror(root1.left, root2.right) && checkMirror(root1.right, root2.left)
+}
+
+func LCA(root *BinaryTreeNode, a, b int) *BinaryTreeNode {
+	if root == nil {
+		return root
+	}
+	if root.data == a || root.data == b {
+		return root
+	}
+	left := LCA(root.left, a, b)
+	right := LCA(root.right, a, b)
+
+	if left != nil && right != nil {
+		return root
+	}
+	if left != nil {
+		return left
+	} else {
+		return right
+	}
 }
 
 func main() {
@@ -624,4 +795,8 @@ func main() {
 	fmt.Println("HalfNodesCountWithQ: ", HalfNodesCountWithQ(t1))
 
 	fmt.Println("HalfNodesCount: ", HalfNodesCount(t1))
+
+	fmt.Println("BinaryTreePaths: \n", BinaryTreePaths(t1))
+
+	//fmt.Println("LCA: \n", LCA(t1))
 }
