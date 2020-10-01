@@ -767,6 +767,201 @@ func LCA(root *BinaryTreeNode, a, b int) *BinaryTreeNode {
 	}
 }
 
+func BuildBinaryree(preOrder []int, inOrder []int) *BinaryTreeNode {
+	if len(preOrder) == 0 || len(inOrder) == 0 {
+		return nil
+	}
+
+	inOrderIndex := findIndex(inOrder, preOrder[0])
+	left := BuildBinaryree(preOrder[1:inOrderIndex+1], inOrder[:inOrderIndex])
+	right := BuildBinaryree(preOrder[inOrderIndex+1:1], inOrder[inOrderIndex+1:])
+
+	return &BinaryTreeNode{
+		data:  preOrder[0],
+		left:  left,
+		right: right,
+	}
+}
+
+func findIndex(a []int, target int) int {
+	for i, x := range a {
+		if x == target {
+			return i
+		}
+	}
+	return -1
+}
+
+func ZigzagLevelOrder(root *BinaryTreeNode) [][]int {
+	if root == nil {
+		return [][]int{}
+	}
+	queue := []*BinaryTreeNode{root}
+	var res [][]int
+	leftToright := false
+
+	for {
+		glen := len(queue)
+		if glen == 0 {
+			break
+		}
+		var levelData []int
+		for i := glen - 1; i >= 0; i-- {
+			node := queue[0]
+			levelData = append(levelData, node.data)
+
+			if node.left != nil {
+				queue = append(queue, node.left)
+			}
+			if node.right != nil {
+				queue = append(queue, node.right)
+			}
+			queue = queue[1:]
+		}
+		if leftToright {
+			reverse(levelData)
+		}
+		res = append(res, levelData)
+		leftToright = !leftToright // !!!
+	}
+	return res
+}
+
+/*
+func ConnectSiblingsWithQ(root *BinaryTreeNode) *BinaryTreeNode {
+	if root == nil {
+		return nil
+	}
+
+	queue := []*BinaryTreeNode{root}
+	for len(queue) > 0 {
+		curr := queue[0]
+		queue = queue[1:]
+		if curr.left != nil && curr.right != nil {
+			curr.left.nextSilbling = curr.right
+			if curr.nextSilbling != nil {
+				curr.right.nextSilbling = curr.nextSilbling.left
+			}
+			queue = append(queue, curr.left)
+			queue = append(queue, curr.right)
+		}
+	}
+	return root
+}
+
+func ConnectSiblings(root *BinaryTreeNode) *BinaryTreeNode {
+	if root.left != nil && root.right != nil {
+		root.left.nextSilbling = root.right
+		if root.nextSilbling != nil {
+			root.right.nextSilbling = root.nextSilbling.left
+		}
+
+		ConnectSiblings(root.left)
+		ConnectSiblings(root.right)
+	}
+	return root
+}
+*/
+
+func reverse(list []int) {
+	if len(list) > 0 {
+		for i := 0; i < len(list)/2; i++ {
+			list[i], list[len(list)-1-i] = list[len(list)-1-i], list[i]
+		}
+	}
+}
+
+func MinDepth(root *BinaryTreeNode) int {
+	if root == nil {
+		return 0
+	}
+	if root.left == nil && root.right == nil {
+		return 1
+	}
+
+	if root.left == nil {
+		return MinDepth(root.right) + 1
+	}
+
+	if root.right == nil {
+		return MinDepth(root.left) + 1
+	}
+	return min(MinDepth(root.left), MinDepth(root.right)) + 1
+}
+
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+func MinDepthWithQ(root *BinaryTreeNode) int {
+	if root == nil {
+		return 0
+	}
+	count := 0
+	queue := []*BinaryTreeNode{root}
+	for len(queue) > 0 {
+		qlen := len(queue)
+		var level []int
+		for i := 0; i < qlen; i++ {
+			node := queue[0]
+			level = append(level, node.data)
+			queue = queue[1:]
+			if node.left == nil && node.right == nil {
+				return count + 1
+			}
+			if node.left != nil {
+				queue = append(queue, node.left)
+			}
+			if node.right != nil {
+				queue = append(queue, node.right)
+			}
+		}
+		count++
+	}
+	return count
+}
+
+func printAncestors(root *BinaryTreeNode, node int) bool {
+	if root == nil {
+		return false
+	}
+
+	if root.data == node {
+		return true
+	}
+
+	left := printAncestors(root.left, node)
+	right := false
+	if !left {
+		right = printAncestors(root.right, node)
+	}
+
+	if left || right {
+		fmt.Printf("%d", root.data)
+	}
+
+	return left || right
+}
+
+func kthAncestor(root *BinaryTreeNode, node int, k *int) *BinaryTreeNode {
+	if root == nil {
+		return nil
+	}
+	if root.data == node || (kthAncestor(root.left, node, k) != nil) || (kthAncestor(root.right, node, k) != nil) {
+		if *k > 0 {
+			*k--
+		} else if *k == 0 {
+			fmt.Printf("%d", root.data)
+			return nil
+		}
+		return root
+	}
+	return nil
+}
+
 func main() {
 	t1 := NewBinaryTree(10, 1)
 	PreOrder(t1)
@@ -797,6 +992,8 @@ func main() {
 	fmt.Println("HalfNodesCount: ", HalfNodesCount(t1))
 
 	fmt.Println("BinaryTreePaths: \n", BinaryTreePaths(t1))
+
+	fmt.Println("printAncestors: \n", printAncestors(t1, 3))
 
 	//fmt.Println("LCA: \n", LCA(t1))
 }
