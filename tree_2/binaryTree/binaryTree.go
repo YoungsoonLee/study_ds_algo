@@ -962,6 +962,34 @@ func kthAncestor(root *BinaryTreeNode, node int, k *int) *BinaryTreeNode {
 	return nil
 }
 
+func IsIsommorphic(root1, root2 *BinaryTreeNode) bool {
+	if root1 == nil && root2 == nil {
+		return true
+	}
+
+	if (root1 == nil && root2 != nil) || (root1 != nil && root2 == nil) {
+		return false
+	}
+
+	return IsIsommorphic(root1.left, root2.left) && IsIsommorphic(root1.right, root2.right)
+}
+
+func findHeight(p []int, n int) int {
+	var maxDepth int
+	for i := 0; i < n; i++ {
+		var j int = i
+		var currDepth int = 1
+		for p[j] != -1 {
+			currDepth++
+			j = p[j]
+		}
+		if currDepth > maxDepth {
+			maxDepth = currDepth
+		}
+	}
+	return maxDepth
+}
+
 func main() {
 	t1 := NewBinaryTree(10, 1)
 	PreOrder(t1)
