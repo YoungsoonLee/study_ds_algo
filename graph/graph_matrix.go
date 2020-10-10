@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 )
 
 type GraphType string
@@ -136,6 +135,7 @@ func (G *AdjacencyMatrix) GetIndegreeForVertex(vertex int) int {
 	return indegree
 }
 
+/*
 func main() {
 	var test = &AdjacencyMatrix{4, 0, DIRECTED, nil}
 	test.Init()
@@ -152,3 +152,4 @@ func main() {
 
 	fmt.Println(test)
 }
+*/
