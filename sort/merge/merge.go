@@ -23,9 +23,11 @@ func merge(left, right []int) []int {
 				right = right[1:]
 			}
 		} else if len(left) > 0 {
+			// 나머지 처리
 			result[i] = left[0]
 			left = left[1:]
 		} else if len(right) > 0 {
+			// 나머지 처리
 			result[i] = right[0]
 			right = right[1:]
 		}
