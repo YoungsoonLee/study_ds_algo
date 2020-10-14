@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sort"
 
 	"github.com/YoungsoonLee/study-ds-algo/sort/bubble"
 	"github.com/YoungsoonLee/study-ds-algo/sort/insertion"
@@ -21,6 +22,55 @@ func CheckDuplicatesInArray(A []int) bool {
 		}
 	}
 	return false
+}
+
+func CheckDuplicatesInOrderedArray(A []int) bool {
+	sort.Ints(A)
+	for i := 0; i < len(A)-1; i++ {
+		if A[i] == A[i+1] {
+			return true
+		}
+	}
+	return false
+}
+
+func CheckWhoWinsTheElection(A []int) int {
+	maxCounter, counter, candidate := 0, 0, A[0]
+	for i := 0; i < len(A); i++ {
+		candidate = A[i]
+		counter = 0
+
+		for j := i + 1; j < len(A); j++ {
+			if A[i] == A[j] {
+				counter++
+			}
+		}
+
+		if counter > maxCounter {
+			maxCounter = counter
+			candidate = A[i]
+		}
+	}
+	return candidate
+}
+
+func CheckWhoWinsTheElectionWithSort(A []int) int {
+	currentCounter, maxCounter, currentCandidate, maxCandidate := 1, 1, A[0], 0
+	sort.Ints(A)
+	for i := 1; i < len(A); i++ {
+		if A[i] == currentCandidate {
+			currentCounter++
+		} else {
+			currentCandidate = A[i]
+			currentCounter = 1
+		}
+
+		if currentCounter > maxCounter {
+			maxCandidate = currentCandidate
+			maxCounter = currentCounter
+		}
+	}
+	return maxCandidate
 }
 
 func main() {
