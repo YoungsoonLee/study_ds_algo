@@ -73,7 +73,40 @@ func CheckWhoWinsTheElectionWithSort(A []int) int {
 	return maxCandidate
 }
 
+func find(A, B []int, K int) bool {
+	sort.Ints(A) // nlogn
+	for i := 0; i < len(B); i++ {
+		c := K - B[i]
+		if binarySearch(c, A) {
+			return true
+		}
+	}
+	return false
+}
+
+func mostFrequent(A []int) int {
+	sort.Ints(A)
+	currentCounter, maxCounter, res, n := 1, 1, A[0], len(A)
+	for i := 1; i < n; i++ {
+		if A[i] == A[i-1] {
+			currentCounter++
+		} else {
+			if currentCounter > maxCounter {
+				maxCounter = currentCounter
+				res = A[i-1]
+			}
+			currentCounter = 1
+		}
+	}
+	if currentCounter > maxCounter { // If last element is most frequent
+		maxCounter = currentCounter
+		res = A[n-1]
+	}
+	return res
+}
+
 func main() {
+
 	input := []int{3, 4, 7, 6, 5, 9, 10}
 
 	fmt.Println("bubble: ", bubble.BubbleSort2(input))
