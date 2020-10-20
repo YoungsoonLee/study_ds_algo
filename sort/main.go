@@ -73,6 +73,7 @@ func CheckWhoWinsTheElectionWithSort(A []int) int {
 	return maxCandidate
 }
 
+/*
 func find(A, B []int, K int) bool {
 	sort.Ints(A) // nlogn
 	for i := 0; i < len(B); i++ {
@@ -83,6 +84,7 @@ func find(A, B []int, K int) bool {
 	}
 	return false
 }
+*/
 
 func mostFrequent(A []int) int {
 	sort.Ints(A)
@@ -105,6 +107,16 @@ func mostFrequent(A []int) int {
 	return res
 }
 
+func convertArraySawToothWave(A []int) {
+	n := len(A)
+	sort.Ints(A)
+	for i := 1; i < n; i += 2 {
+		if i+1 < n {
+			A[i], A[i+1] = A[i+1], A[i]
+		}
+	}
+}
+
 func main() {
 
 	input := []int{3, 4, 7, 6, 5, 9, 10}
@@ -115,4 +127,6 @@ func main() {
 	fmt.Println("shell: ", shell.ShellSort(input))
 	fmt.Println("merge: ", merge.MergeSort(input))
 	fmt.Println("quick: ", quick.QuickSort(input))
+
+	fmt.Println("quick: ", quick.QuickSortTucker(input))
 }
