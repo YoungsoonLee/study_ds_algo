@@ -41,8 +41,7 @@ func getMinimum(h *Heap) (Item, error) {
 }
 
 func swap(h *Heap, i, j int) {
-	temp := h.data[i]
-	h.data[i], h.data[j] = h.data[j], temp
+	h.data[i], h.data[j] = h.data[j], h.data[i]
 }
 
 // for insert
@@ -95,7 +94,7 @@ func (h *Heap) Extract() (Item, error) {
 	h.data = h.data[:n-1]
 	h.size--
 	if h.size > 0 {
-		h.percolateDown(0)
+		h.percolateDown(0) // 다시 heap 만듬
 	} else {
 		h.data = nil
 	}
@@ -111,7 +110,7 @@ func (h *Heap) Insert(item Item) {
 		h.data = append(h.data, item)
 	}
 	h.size++
-	h.percolateUp()
+	h.percolateUp() //
 }
 
 func Heapify(items []Item) *Heap {
