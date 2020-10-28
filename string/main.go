@@ -183,6 +183,121 @@ func permutations(str string) {
 	permute([]rune(str), 0)
 }
 
+func removeAdjacentPairs(str string) string {
+	r := []rune(str)
+	n, i, j := len(r), 0, 0
+	for i = 0; i < n; i++ {
+		if j > 0 && i < n && (r[i] == r[j-1]) {
+			j--
+		} else {
+			r[j] = r[i]
+			j++
+		}
+	}
+	return string(r[:j])
+}
+
+func minWindow(S string, T string) string {
+	rem := 0
+	shouldFind := make(map[byte]int)
+	for i := range T {
+		rem++
+		shouldFind[T[i]]++
+	}
+
+	if rem > len(S) {
+		return ""
+	}
+
+	var hasFound = string(make([]byte, len(S)))
+	start, end := 0, 0
+	for end < len(S) {
+		if v, ok := shouldFind[S[end]]; ok {
+			if v > 0 {
+				rem--
+			}
+		}
+		shouldFind[S[end]]--
+	}
+
+	for rem <= 0 {
+		if len(hasFound) >= len(S[start:end+1]) {
+			hasFound = S[start : end+1]
+		}
+		if _, ok := shouldFind[S[start]]; ok {
+			shouldFind[S[start]]++
+			if shouldFind[S[start]] > 0 {
+				rem++
+			}
+		}
+		start++
+	}
+
+	return ""
+}
+
+func findMatch(board [][]byte, word string) bool {
+	visited := make([][]bool, len(board))
+	// init 2d array
+	for i := 0; i < len(visited); i++ {
+		visited[i] = make([]bool, len(board[0]))
+	}
+
+	pos := 0
+	for i := 0; i < len(board); i++ {
+		for j := 0; j < len(board[0]); j++ {
+			if helper(visited, board, i, j, word, pos) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func helper(visited [][]bool, board [][]byte, r, c int, word string, pos int) bool {
+	if pos == len(word) {
+		return true
+	}
+
+	if r < 0 || r == len(board) || c < 0 || c == len(board[0]) {
+		return false
+	}
+
+	if board[r][c] != word[pos] || visited[r][c] {
+		return false
+	}
+
+	visited[r][c] = true
+	// check 8 neighbors
+	if helper(visited, board, r-1, c, word, pos+1) {
+		return true
+	}
+	if helper(visited, board, r+1, c, word, pos+1) {
+		return true
+	}
+	if helper(visited, board, r, c-1, word, pos+1) {
+		return true
+	}
+	if helper(visited, board, r, c+1, word, pos+1) {
+		return true
+	}
+	if helper(visited, board, r+1, c+1, word, pos+1) {
+		return true
+	}
+	if helper(visited, board, r+1, c-1, word, pos+1) {
+		return true
+	}
+	if helper(visited, board, r-1, c+1, word, pos+1) {
+		return true
+	}
+	if helper(visited, board, r-1, c-1, word, pos+1) {
+		return true
+	}
+
+	visited[r][c] = false
+	return false
+}
+
 func main() {
 	fmt.Println(combinations("abc"))
 	permutations("abc")
