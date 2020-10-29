@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 )
 
 func strStr(T, P string) int {
@@ -298,7 +299,64 @@ func helper(visited [][]bool, board [][]byte, r, c int, word string, pos int) bo
 	return false
 }
 
+func urlify(A string) string {
+	space, n := 0, len(A)
+	for i := 0; i < n; i++ {
+		if string(A[i]) == " " {
+			space++
+		}
+	}
+	originalLength := space*2 + n
+	r := make([]byte, originalLength)
+	for i := 0; i < n; i++ {
+		r[i] = A[i]
+	}
+	fmt.Println(r)
+	fmt.Println(string(r))
+
+	for i := n - 1; i >= 0; i-- {
+		if r[i] == ' ' {
+			r[originalLength-1] = '0'
+			r[originalLength-2] = '2'
+			r[originalLength-3] = '%'
+			originalLength = originalLength - 3
+		} else {
+			r[originalLength-1] = r[i]
+			originalLength--
+		}
+	}
+	return string(r)
+}
+
+func compress(S string) (int, string) {
+	n := len(S)
+	A := []rune(S)
+	anchor := 0
+	read := 0
+	write := 0
+
+	for read <= n {
+		for (read < n) && (A[anchor] == A[read]) {
+			read++
+		}
+		A[write] = A[anchor]
+		write++
+		count := read - anchor
+		if count > 1 {
+			s := strconv.Itoa(count)
+			for k := 0; k < len(s); k++ {
+				A[write] = rune(s[k])
+				write++
+			}
+		}
+		anchor = read
+		read++
+	}
+	return write, string(A)
+}
+
 func main() {
+	fmt.Println(urlify("http://test.com/ &beforeSpace"))
 	fmt.Println(combinations("abc"))
 	permutations("abc")
 	fmt.Println(isMatch("CareerMonk Publications", "*ca?ions"))
