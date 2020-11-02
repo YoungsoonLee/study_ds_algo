@@ -56,8 +56,8 @@ func (h *Heap) percolateUp() {
 		if p < 0 || h.data[p].Less(h.data[idx]) {
 			break
 		}
-		swap(h, p, idx)
-		idx = p
+		swap(h, p, idx) // swap
+		idx = p         // !!!
 	}
 }
 
