@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math"
 	"sort"
 )
@@ -39,6 +40,7 @@ func stockStrategy(A []int) []int {
 	return []int{profit, buyDateIndex, sellDateIndex}
 }
 
+/*
 func stockStrategy2(price []int, left, right int) (int, int, int) {
 	if left == right {
 		return 0, left, right
@@ -61,6 +63,7 @@ func stockStrategy2(price []int, left, right int) (int, int, int) {
 		return rightProfit, rightBuyDateIndex, rightSellDateIndex
 	}
 }
+*/
 
 func shuffleArray2(A []int, left, right int) {
 	c := left + (right-left)/2
@@ -126,4 +129,165 @@ func maxCrossingSubArray(A []int, low, high, mid int) (int, int, int) {
 		}
 	}
 	return maxLeft, maxRight, (leftSum + rightSum)
+}
+
+func recursiveFibonacci(n int) int {
+	if n == 0 {
+		return 0
+	}
+
+	if n == 1 {
+		return 1
+	}
+
+	return recursiveFibonacci(n-1) + recursiveFibonacci(n-2)
+}
+
+func fibonacci(n int) int {
+	var fib []int
+
+	if len(fib) == 0 {
+		fib = make([]int, n+1)
+	}
+
+	if n == 0 {
+		return 0
+	}
+	if n == 1 {
+		return 1
+	}
+
+	if fib[n] != 0 {
+		return fib[n]
+	}
+	fib[n] = fibonacci(n-1) + fibonacci(n-2)
+	return fib[n]
+}
+
+func fibonacciDP(n int) int {
+	fib := make([]int, n+1)
+	fib[0], fib[1] = 0, 1
+	for i := 2; i <= n; i++ {
+		fib[i] = fib[i-1] + fib[i-2]
+	}
+	return fib[n]
+}
+
+func fibonacciFinal(n int) int {
+	a, b, sum := 0, 1, 0
+	for i := 1; i < n; i++ {
+		sum = a + b
+		a = b
+		b = sum
+	}
+	return sum
+}
+
+func factorial(n int) int {
+	if n == 0 || n == 1 {
+		return 1
+	} else {
+		return n * factorial(n-1)
+	}
+}
+
+var factorials []int
+
+func factorialDP(n int) int {
+	if len(factorials) == 0 {
+		factorials = make([]int, n+1)
+	}
+	if n == 0 || n == 1 {
+		return 1
+	} else if factorials[n] != 0 {
+		return factorials[n]
+	} else {
+		factorials[n] = n * factorialDP(n-1)
+		return factorials[n]
+	}
+}
+
+func climbStairs(n int) int {
+	if n < 3 {
+		return n
+	}
+	cache := make([]int, n)
+	cache[0], cache[1] = 1, 2
+	for i := 2; i < n; i++ {
+		cache[i] = cache[i-1] + cache[i-2]
+	}
+	return cache[n-1]
+}
+
+func maxContiguousSum(A []int) int {
+	maxSum, n := 0, len(A)
+	for i := 1; i < n; i++ {
+		for j := 1; j < n; j++ {
+			currentSum := 0
+			for k := i; k <= j; k++ {
+				currentSum += A[k]
+			}
+			if currentSum > maxSum {
+				maxSum = currentSum
+			}
+		}
+	}
+	return maxSum
+}
+
+func maxContiguousSum2(A []int) int {
+	maxSum, n := 0, len(A)
+	for i := 1; i < n; i++ {
+		currentSum := 0
+		for j := i; j < n; j++ {
+			currentSum += A[j]
+			if currentSum > maxSum {
+				maxSum = currentSum
+			}
+		}
+	}
+	return maxSum
+}
+
+func maxContiguousSum3(A []int) int {
+	n := len(A)
+	M := make([]int, n+1)
+	maxSum := 0
+	if A[0] > 0 {
+		M[0] = A[0]
+	} else {
+		M[0] = 0
+	}
+	for i := 1; i < n; i++ {
+		if M[i-1]+A[i] > 0 {
+			M[i] = M[i-1] + A[i]
+		} else {
+			M[i] = 0
+		}
+	}
+	for i := 0; i < n; i++ {
+		if M[i] > maxSum {
+			maxSum = M[i]
+		}
+	}
+	return maxSum
+}
+
+func maxContiguousSum4(A []int) int {
+	sumSofar, sumEndingHere, n := 0, 0, len(A)
+	for i := 1; i < n; i++ {
+		sumEndingHere = sumEndingHere + A[i]
+		if sumEndingHere < 0 {
+			sumEndingHere = 0
+			continue
+		}
+		if sumSofar < sumEndingHere {
+			sumSofar = sumEndingHere
+		}
+	}
+	return sumSofar
+}
+
+func main() {
+	fmt.Println(fibonacciFinal(10))
 }
