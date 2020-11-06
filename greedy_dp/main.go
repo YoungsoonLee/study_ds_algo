@@ -288,6 +288,19 @@ func maxContiguousSum4(A []int) int {
 	return sumSofar
 }
 
+func subsetSum(A []int, n, sum int) bool {
+	if sum == 0 {
+		return true
+	}
+	if n == 0 && sum != 0 {
+		return false
+	}
+	if A[n-1] > sum {
+		return subsetSum(A, n-1, sum)
+	}
+	return subsetSum(A, n-1, sum) || subsetSum(A, n-1, sum-A[n-1])
+}
+
 func main() {
 	fmt.Println(fibonacciFinal(10))
 }
