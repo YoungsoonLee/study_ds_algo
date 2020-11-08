@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 	"time"
+	"unicode"
 )
 
 // O(n^2)
@@ -80,6 +81,44 @@ func reverseArray(arr []int, start int, end int) {
 		start++
 		end--
 	}
+}
+
+func mySwap(A []rune, i int, j int) {
+	A[i], A[j] = A[j], A[i]
+}
+
+func moveSpacesToBegin(A []rune) {
+	var i int = len(A) - int(1)
+	var j int = i
+	for ; j >= 0; j-- {
+		if unicode.IsSpace(A[j]) != true {
+			mySwap(A, func() int {
+				defer func() {
+					i--
+				}()
+				return i
+			}(), j)
+		}
+	}
+}
+
+func canPlaceFlowers(flowerbed []int, n int) bool {
+	lenF, count := len(flowerbed), 0
+	for p := range flowerbed {
+		if flowerbed[p] == 0 && (p == 0 || flowerbed[p-1] == 0) && (p == lenF-1 || flowerbed[p+1] == 0) {
+			flowerbed[p] = 1
+			count++
+		}
+	}
+	return count >= n
+}
+
+func findTheDifference(s string, t string) string {
+	var res byte
+	for _, b := range []byte(s + t) {
+		res ^= b
+	}
+	return string(res)
 }
 
 func main() {
