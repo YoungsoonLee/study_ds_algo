@@ -148,25 +148,29 @@ func (G AdjacencyMap) Weight(u, v Vertext) int {
 }
 
 func main() {
-	G := NewGraph(map[string]Vertext{
-		"a": 1,
-		"b": 2,
-		"c": 3,
-		"d": 4,
-		"e": 5,
-		"f": 6,
-	})
+	fmt.Println(2 / 11)
 
-	G.AddEdge("a", "b", 7)
-	G.AddEdge("a", "c", 9)
-	G.AddEdge("a", "f", 14)
-	G.AddEdge("b", "c", 10)
-	G.AddEdge("c", "d", 11)
-	G.AddEdge("c", "f", 2)
-	G.AddEdge("d", "e", 6)
-	G.AddEdge("e", "f", 9)
+	/*
+		G := NewGraph(map[string]Vertext{
+			"a": 1,
+			"b": 2,
+			"c": 3,
+			"d": 4,
+			"e": 5,
+			"f": 6,
+		})
 
-	distance, previous := Dijkstra(G, G.ids["a"])
-	fmt.Printf("Distance to %s is %d, Path: %s\n", "e", distance[G.ids["e"]], G.GetPath(G.ids["e"], previous))
-	fmt.Printf("Distance to %s is %d, Path: %s\n", "e", distance[G.ids["f"]], G.GetPath(G.ids["f"], previous))
+		G.AddEdge("a", "b", 7)
+		G.AddEdge("a", "c", 9)
+		G.AddEdge("a", "f", 14)
+		G.AddEdge("b", "c", 10)
+		G.AddEdge("c", "d", 11)
+		G.AddEdge("c", "f", 2)
+		G.AddEdge("d", "e", 6)
+		G.AddEdge("e", "f", 9)
+
+		distance, previous := Dijkstra(G, G.ids["a"])
+		fmt.Printf("Distance to %s is %d, Path: %s\n", "e", distance[G.ids["e"]], G.GetPath(G.ids["e"], previous))
+		fmt.Printf("Distance to %s is %d, Path: %s\n", "e", distance[G.ids["f"]], G.GetPath(G.ids["f"], previous))
+	*/
 }
